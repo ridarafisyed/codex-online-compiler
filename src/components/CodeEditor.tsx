@@ -1,31 +1,30 @@
+"use client";
+
 import React from "react";
-import CodeMirror, { ReactCodeMirrorProps } from "@uiw/react-codemirror";
-import { Extension } from "@codemirror/state";
-import { javascript } from "@codemirror/lang-javascript";
+import CodeMirror from "@uiw/react-codemirror";
+import { LANGUAGE_EXTENSIONS } from "@/constants/languages";
+import { CodeEditorProps } from "@/types";
+import { useLanguage } from "@/context/LanguageContext";
 
-interface CodeEditorProps {
-  value: string; // The code to display
-  onChange: (value: string) => void; // Callback when the code changes
-  extensions?: Extension[]; // Optional extensions for language support
-  height?: string; // Optional height of the editor
-  theme?: ReactCodeMirrorProps["theme"]; // Optional theme for the editor
-}
+const CodeEditor: React.FC<CodeEditorProps> = ({ value, onChange }) => {
+  const { language } = useLanguage();
+  const languageExtension =
+    LANGUAGE_EXTENSIONS[language] || LANGUAGE_EXTENSIONS["javascript"];
 
-const CodeEditor: React.FC<CodeEditorProps> = ({
-  value,
-  onChange,
-  extensions = [javascript()], // Default to JavaScript
-  height = "500px",
-  theme = "dark",
-}) => {
   return (
-    <CodeMirror
-      value={value}
-      height={height}
-      extensions={extensions}
-      onChange={onChange}
-      theme={theme}
-    />
+    <div className="w-full">
+      <CodeMirror
+        value={value}
+        extensions={[languageExtension]}
+        theme="dark"
+        onChange={(value) => onChange(value || "")}
+        className="border border-gray-700 rounded-lg"
+        style={{
+          height: "20rem",
+          overflowY: "auto",
+        }}
+      />
+    </div>
   );
 };
 
