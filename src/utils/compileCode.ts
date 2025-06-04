@@ -1,25 +1,27 @@
-import { NextResponse } from "next/server";
 import { exec } from "child_process";
 
 type CompileResult = {
   success: boolean;
   logs: string[];
-  error?: string; // Optional field
+  error?: string;
 };
+
+type ConsoleArgs = (string | number | boolean | object)[];
 
 export const compileJavascript = (code: string): CompileResult => {
   const logs: string[] = [];
   const customConsole = {
-    log: (...args: any[]) => logs.push(args.join(" ")),
-    error: (...args: any[]) => logs.push("Error: " + args.join(" ")),
-    warn: (...args: any[]) => logs.push("Warning: " + args.join(" ")),
+    log: (...args: ConsoleArgs) => logs.push(args.join(" ")),
+    error: (...args: ConsoleArgs) => logs.push("Error: " + args.join(" ")),
+    warn: (...args: ConsoleArgs) => logs.push("Warning: " + args.join(" ")),
   };
 
   try {
     const console = customConsole;
     new Function("console", code)(console);
     return { success: true, logs };
-  } catch (error: any) {
+  } catch (err: unknown) {
+    const error = err as Error;
     return {
       success: false,
       logs,
@@ -50,12 +52,12 @@ export const compilePython3 = (code: string): Promise<CompileResult> => {
 
     exec(
       `python3 -c "${code.replace(/"/g, '\\"')}"`,
-      (error: any, stdout, stderr) => {
-        if (error || stderr) {
+      (err: Error | null, stdout: string, stderr: string) => {
+        if (err || stderr) {
           resolve({
             success: false,
             logs: [],
-            error: stderr?.trim() || error.message,
+            error: stderr?.trim() || err?.message,
           });
         } else {
           if (stdout) {

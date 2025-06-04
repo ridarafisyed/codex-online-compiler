@@ -1,11 +1,11 @@
 import { javascript } from "@codemirror/lang-javascript";
 import { python } from "@codemirror/lang-python";
 import { cpp } from "@codemirror/lang-cpp";
-import { DiPython } from "react-icons/di";
+import { Extension } from "@codemirror/state";
 
 export const LANGUAGES = ["javascript", "python3", "cpp"];
 
-export const LANGUAGE_EXTENSIONS: Record<string, any> = {
+export const LANGUAGE_EXTENSIONS: Record<string, Extension> = {
   javascript: javascript(),
   python3: python(),
   cpp: cpp(),
