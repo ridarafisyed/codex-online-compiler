@@ -6,20 +6,20 @@ import { ICONS } from "@/constants/icons";
 import { useLanguage } from "@/context/LanguageContext";
 
 const Sidebar: React.FC<SidebarProps> = ({ languages, onSelect }) => {
-  const { language } = useLanguage();
+  const { language: selectedLanguage } = useLanguage();
 
   return (
     <div className="bg-gray-800 text-white h-screen p-4">
       <ul className="space-y-2">
-        {languages.map((language) => (
+        {languages.map((lang) => (
           <li
-            key={language}
+            key={lang}
             className={`cursor-pointer p-2 rounded-lg ${
-              language === language ? "bg-gray-700" : "hover:bg-gray-700"
+              lang === selectedLanguage ? "bg-gray-700" : "hover:bg-gray-700"
             }`}
-            onClick={() => onSelect(language)}
+            onClick={() => onSelect(lang)}
           >
-            {ICONS[language]}
+            {ICONS[lang]}
           </li>
         ))}
       </ul>

@@ -27,6 +27,4 @@ interface CustomResponsePayload {
   error?: string;
 }
 
-export interface CustomNextResponse extends NextResponse {
-  json: (data: CustomResponsePayload) => void;
-}
+export type CustomNextResponse = NextResponse<CustomResponsePayload>;

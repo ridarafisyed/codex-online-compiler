@@ -1,4 +1,3 @@
-import { languages } from "monaco-editor/esm/metadata";
 import React from "react";
 import { FaPlay } from "react-icons/fa";
 import { RiResetLeftLine } from "react-icons/ri";

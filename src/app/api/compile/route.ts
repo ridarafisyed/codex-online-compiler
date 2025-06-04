@@ -22,13 +22,13 @@ export const POST = async (req: Request) => {
         console.log(result);
         return NextResponse.json(result);
       }
-    } catch (error: any) {
+    } catch (err: unknown) {
       return NextResponse.json({
         success: false,
-        error: error.message,
+        error: (err as Error).message,
       });
     }
-  } catch (error: any) {
+  } catch {
     return NextResponse.json({
       success: false,
       error: "Invalid request",
