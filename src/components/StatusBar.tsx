@@ -1,7 +1,9 @@
+"use client";
+
 import React from "react";
-import { FaPlay } from "react-icons/fa";
-import { RiResetLeftLine } from "react-icons/ri";
+import { Play, RotateCcw } from "lucide-react";
 import { PAGE_NAME } from "@/constants/languages";
+import { Button, Card, CardHeader, Separator } from "@/components/ui";
 
 interface StatusBarProps {
   selectedLanguage: string;
@@ -15,25 +17,32 @@ const StatusBar: React.FC<StatusBarProps> = ({
   onReset,
 }) => {
   return (
-    <div className="flex justify-between items-center w-full mb-4 border-b-2 border-gray-700 space-y-2">
-      <h3 className="font-bold text-lg rounded-t-lg border-gray-700 border-x-2 border-t-2 px-3">
-        {PAGE_NAME[selectedLanguage]}
-      </h3>
-      <div className="space-x-3 mb-2">
-        <button
-          onClick={onReset}
-          className="px-4 py-2 mb-2 text-white rounded-lg bg-gray-700"
-        >
-          <RiResetLeftLine />
-        </button>
-        <button
-          onClick={onRun}
-          className="px-4 py-2 text-white rounded-lg bg-blue-400"
-        >
-          <FaPlay />
-        </button>
-      </div>
-    </div>
+    <Card className="w-full mb-4">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <h3 className="font-semibold text-lg">
+          {PAGE_NAME[selectedLanguage]}
+        </h3>
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={onReset}
+            className="h-9 w-9"
+          >
+            <RotateCcw className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="default"
+            size="icon"
+            onClick={onRun}
+            className="h-9 w-9"
+          >
+            <Play className="h-4 w-4" />
+          </Button>
+        </div>
+      </CardHeader>
+      <Separator />
+    </Card>
   );
 };
 

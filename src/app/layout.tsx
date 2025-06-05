@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
+import { ThemeProvider } from "@/context/ThemeContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,21 +20,30 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children,
+  children,             
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head />
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-900 text-white `}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
       >
-        <LanguageProvider>
-          <nav className="p-4">
-            <h1 className="font-bold text-2xl">Codex</h1>
-          </nav>
-          {children}
-        </LanguageProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <LanguageProvider>
+            <nav className="p-4">
+              <h1 className="font-bold text-2xl">Codex</h1>
+            </nav>
+            {children}
+          </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

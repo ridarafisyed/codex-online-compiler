@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 
 interface OutputDisplayProps {
@@ -6,15 +8,17 @@ interface OutputDisplayProps {
 
 const OutputDisplay: React.FC<OutputDisplayProps> = ({ output }) => {
   return (
-    <div className="w-full max-w-screen ">
-      <div className=" w-full max-w-screen mt-2 mb-4 pb-2 border-b-2 border-gray-700 space-y-2 ">
-        <h3 className="text-lg font-semibold mt-6 border-x-2 border-t-2 rounded border-gray-500 max-w-24 px-2">
-          Terminal:
-        </h3>
-      </div>
-      <div className="p-3 bg-gray-800 border border-gray-700 rounded-lg text-white overflow-x-auto whitespace-pre-wrap">
-        <code className="text-sm px-4">{output || ""}</code>
-      </div>
+    <div className="w-full">
+      <pre
+        className="p-4 font-mono text-sm bg-muted/50 rounded-lg overflow-auto"
+        style={{
+          height: "10rem",
+          whiteSpace: "pre-wrap",
+          wordBreak: "break-word",
+        }}
+      >
+        {output || "No output yet. Run your code to see the results."}
+      </pre>
     </div>
   );
 };

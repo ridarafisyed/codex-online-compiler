@@ -1,4 +1,7 @@
 import { exec } from "child_process";
+import { writeFileSync, unlinkSync } from "fs";
+import { join } from "path";
+import { tmpdir } from "os";
 
 type CompileResult = {
   success: boolean;
@@ -70,5 +73,64 @@ export const compilePython3 = (code: string): Promise<CompileResult> => {
         }
       }
     );
+  });
+};
+
+export const compileCpp = (code: string): Promise<CompileResult> => {
+  return new Promise((resolve) => {
+    const logs: string[] = [];
+    const tempDir = tmpdir();
+    const sourceFile = join(tempDir, `temp_${Date.now()}.cpp`);
+    const outputFile = join(tempDir, `temp_${Date.now()}`);
+
+    try {
+      // Write the code to a temporary file
+      writeFileSync(sourceFile, code);
+
+      // Compile the C++ code
+      exec(`g++ ${sourceFile} -o ${outputFile}`, (compileErr, compileStdout, compileStderr) => {
+        if (compileErr || compileStderr) {
+          resolve({
+            success: false,
+            logs: [],
+            error: compileStderr?.trim() || compileErr?.message,
+          });
+          return;
+        }
+
+        // Run the compiled program
+        exec(outputFile, (runErr, runStdout, runStderr) => {
+          // Clean up temporary files
+          try {
+            unlinkSync(sourceFile);
+            unlinkSync(outputFile);
+          } catch (cleanupErr) {
+            console.error('Error cleaning up temporary files:', cleanupErr);
+          }
+
+          if (runErr || runStderr) {
+            resolve({
+              success: false,
+              logs: [],
+              error: runStderr?.trim() || runErr?.message,
+            });
+          } else {
+            if (runStdout) {
+              logs.push(...runStdout.trim().split("\n"));
+            }
+            resolve({
+              success: true,
+              logs,
+            });
+          }
+        });
+      });
+    } catch (err) {
+      resolve({
+        success: false,
+        logs: [],
+        error: (err as Error).message,
+      });
+    }
   });
 };

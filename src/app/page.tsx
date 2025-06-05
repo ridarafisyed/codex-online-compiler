@@ -7,6 +7,7 @@ import Sidebar from "@/components/Sidebar";
 import StatusBar from "@/components/StatusBar";
 import { LANGUAGE_STARTER_CODE, LANGUAGES } from "@/constants/languages";
 import { useLanguage } from "@/context/LanguageContext";
+import { Card, CardContent } from "@/components/ui";
 
 export default function Home() {
   const { language, starterCode, setLanguage } = useLanguage();
@@ -44,7 +45,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex w-full">
+    <div className="flex min-h-screen">
       {/* Sidebar */}
       <Sidebar
         languages={LANGUAGES}
@@ -52,7 +53,7 @@ export default function Home() {
         onSelect={(lang) => setLanguage(lang)}
       />
 
-      <div className="flex flex-col items-center w-full p-4">
+      <main className="flex-1 p-6 space-y-6">
         {/* StatusBar */}
         <StatusBar
           selectedLanguage={language}
@@ -60,12 +61,22 @@ export default function Home() {
           onReset={handleCodeReset}
         />
 
-        {/* CodeEditor */}
-        <CodeEditor value={code} onChange={setCode} language={language} />
+        <div className="grid gap-6">
+          {/* CodeEditor */}
+          <Card>
+            <CardContent className="p-0">
+              <CodeEditor value={code} onChange={setCode} language={language} />
+            </CardContent>
+          </Card>
 
-        {/* OutputDisplay */}
-        <OutputDisplay output={output} />
-      </div>
+          {/* OutputDisplay */}
+          <Card>
+            <CardContent className="p-0">
+              <OutputDisplay output={output} />
+            </CardContent>
+          </Card>
+        </div>
+      </main>
     </div>
   );
 }

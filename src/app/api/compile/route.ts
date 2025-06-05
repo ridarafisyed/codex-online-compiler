@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { compileJavascript, compilePython3 } from "@/utils/compileCode";
+import { compileJavascript, compilePython3, compileCpp } from "@/utils/compileCode";
 
 export const POST = async (req: Request) => {
   try {
@@ -13,14 +13,21 @@ export const POST = async (req: Request) => {
     }
 
     try {
-      if (language === "javascript") {
-        const result = compileJavascript(code);
-        return NextResponse.json(result);
-      }
-      if (language === "python3") {
-        const result = await compilePython3(code);
-        console.log(result);
-        return NextResponse.json(result);
+      switch (language) {
+        case "javascript":
+          const jsResult = compileJavascript(code);
+          return NextResponse.json(jsResult);
+        case "python3":
+          const pyResult = await compilePython3(code);
+          return NextResponse.json(pyResult);
+        case "cpp":
+          const cppResult = await compileCpp(code);
+          return NextResponse.json(cppResult);
+        default:
+          return NextResponse.json({
+            success: false,
+            error: `Unsupported language: ${language}`,
+          });
       }
     } catch (err: unknown) {
       return NextResponse.json({
@@ -28,7 +35,7 @@ export const POST = async (req: Request) => {
         error: (err as Error).message,
       });
     }
-  } catch {
+  } catch (err) {
     return NextResponse.json({
       success: false,
       error: "Invalid request",
